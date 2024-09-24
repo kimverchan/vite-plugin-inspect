@@ -3,6 +3,7 @@ import { Buffer } from 'node:buffer'
 import { createFilter } from '@rollup/pluginutils'
 import type { ResolvedConfig, ViteDevServer } from 'vite'
 import type { ModuleInfo, PluginMetricInfo, ResolveIdInfo } from '../types'
+import type { Options } from './options'
 import { Recorder } from './recorder'
 import { DUMMY_LOAD_PLUGIN_NAME } from './constants'
 import { removeVersionQuery } from './utils'
@@ -14,7 +15,7 @@ export class ViteInspectContext {
   public recorderClient: Recorder
   public recorderServer: Recorder
 
-  constructor(public options: any) {
+  constructor(public options: Options) {
     this.filter = createFilter(options.include, options.exclude)
     this.recorderClient = new Recorder(this)
     this.recorderServer = new Recorder(this)

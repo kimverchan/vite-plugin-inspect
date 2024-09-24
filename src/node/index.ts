@@ -57,15 +57,15 @@ export default function PluginInspect(options: Options = {}): Plugin {
       if (typeof originalHandle !== 'function' || !originalHandle.name)
         return middleware
 
-      middleware.handle = (...middlewareArgs: any[]) => {
-        let req: any
+      middleware.handle = (...middlewareArgs: Parameters<Connect.HandleFunction>) => {
+        let req: Connect.IncomingMessage
         if (middlewareArgs.length === 4)
           [, req] = middlewareArgs
         else
           [req] = middlewareArgs
 
         const start = Date.now()
-        const url = req.url?.replace(timestampRE, '').replace(trailingSeparatorRE, '')
+        const url = req.url?.replace(timestampRE, '').replace(trailingSeparatorRE, '') ?? ''
         serverPerf.middleware![url] ??= []
 
         if (firstMiddlewareIndex < 0)
@@ -223,10 +223,10 @@ export default function PluginInspect(options: Options = {}): Plugin {
       config.plugins.forEach(plugin => hijackPlugin(plugin, ctx))
       const _createResolver = config.createResolver
       // @ts-expect-error mutate readonly
-      config.createResolver = function (this: any, ...args: any) {
+      config.createResolver = function (this: any, ...args: Parameters<typeof _createResolver>) {
         const _resolver = _createResolver.apply(this, args)
 
-        return async function (this: any, ...args: any) {
+        return async function (this: any, ...args: Parameters<ReturnType<typeof _createResolver>>) {
           const id = args[0]
           const aliasOnly = args[2]
           const ssr = args[3]

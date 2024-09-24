@@ -1,5 +1,6 @@
 import type { Awaitable } from '@antfu/utils'
 import type { StackFrame } from 'error-stack-parser-es'
+import type { SourceMapInput } from 'rollup'
 
 export interface TransformInfo {
   name: string
@@ -7,7 +8,7 @@ export interface TransformInfo {
   start: number
   end: number
   order?: string
-  sourcemaps?: any
+  sourcemaps?: SourceMapInput
   error?: ParsedError
 }
 
